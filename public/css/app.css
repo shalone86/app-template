@@ -1,0 +1,3 @@
+/* App-specific styles (base.css has the shared look). */
+.demo-dots { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; }
+.demo-dots i { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); box-shadow: inset -3px -3px 0 rgb(0 0 0 / .2); }
