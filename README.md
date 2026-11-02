@@ -11,7 +11,7 @@ The starting point for our kids' learning apps (Regroup!, Snap & Split, …). Ev
 - **Grown-ups page** with voice, sounds and passcode settings (`kit/ui.js → viewGrownups`).
 - **Shared look:** big tap targets, dark mode, and the colors `--blue --green --red --purple --yellow` (`css/base.css`).
 - **Installable and offline:** service worker, manifest, and PNG icons for iOS and Android.
-- **Cloudflare Worker** serving the app plus `/api/health` and `/api/tts`, with a passcode option.
+- **Cloudflare Worker** serving the app plus `/api/health` and `/api/tts`, with a passcode option. The voice comes from your own voice server first (Kokoro on the Mac Studio, see [docs/MAC-VOICE-SETUP.md](docs/MAC-VOICE-SETUP.md)), then Workers AI.
 
 No build step: plain ES modules in `public/`.
 
