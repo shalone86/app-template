@@ -11,7 +11,7 @@ The starting point for our kids' learning apps (Regroup!, Snap & Split, …). Ev
 - **Grown-ups page** with voice, sounds and passcode settings (`kit/ui.js → viewGrownups`).
 - **Shared look:** big tap targets, dark mode, and the colors `--blue --green --red --purple --yellow` (`css/base.css`).
 - **Installable and offline:** service worker, manifest, and PNG icons for iOS and Android.
-- **Cloudflare Worker** serving the app plus `/api/health` and `/api/tts`, with a passcode option. The voice comes from your own voice server first (Kokoro on the Mac Studio, see [docs/MAC-VOICE-SETUP.md](docs/MAC-VOICE-SETUP.md)), then Workers AI.
+- **Cloudflare Worker** serving the app plus `/api/health` and `/api/tts`, with a passcode option. The voice is all Cloudflare Workers AI: Aura-2 for single words and numbers, MeloTTS (about 100× cheaper) for sentences of three or more words.
 
 No build step: plain ES modules in `public/`.
 
@@ -37,7 +37,7 @@ python3 -m http.server -d public 8787    # or: npx wrangler dev
 npx wrangler deploy            # → https://<name>.<you>.workers.dev
 ```
 
-The voice API is open unless you set a passcode: `npx wrangler secret put APP_PASSCODE` (then enter it on the grown-ups page). On Cloudflare's free plan the voice costs nothing and falls back to the device voice after the daily allowance; on the paid plan it's $0.03 per 1,000 characters (about 5–8¢ for a 5-question level).
+The voice API is open unless you set a passcode: `npx wrangler secret put APP_PASSCODE` (then enter it on the grown-ups page). On Cloudflare's free plan the voice costs nothing and falls back to the device voice after the daily allowance; on the paid plan, words cost $0.03 per 1,000 characters and sentences a tiny fraction of that.
 
 ## Lessons learned (please keep)
 
