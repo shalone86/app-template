@@ -192,3 +192,32 @@ body.in-game .topbar { display: none; }
 @keyframes lesson-pop { 50% { transform: scale(1.25); } }
 .lesson-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 14px; }
 @media (prefers-reduced-motion: reduce) { .lesson-card, .lesson-focus.lesson-focus-on { animation: none; } }
+
+/* ───────── Small screens (learned the hard way in Regroup, Snap, Grammar, Doubles) ───────── */
+@media (max-width: 480px) {
+  .play { padding-bottom: 150px; }
+  .play-top { padding: 4px 0; }
+  .bubble { min-height: 0; padding: 6px 8px 6px 10px; margin-bottom: 8px; }
+  .mascot { font-size: 1.8rem; }
+  .say { font-size: 1.02rem; }
+}
+/* Phones turned sideways: the game on the left; top buttons, bubble and controls in a right column. */
+@media (orientation: landscape) and (max-height: 520px) {
+  body.in-game main { max-width: none; padding: 4px 12px 12px; padding-right: 268px; }
+  .play { padding-bottom: 12px; }
+  .play-top { position: fixed; right: 0; top: 0; width: 256px; z-index: 31; padding: 6px 10px; }
+  .icon-btn { width: 36px; height: 36px; font-size: 1rem; border-radius: 11px; }
+  .bubble { position: fixed; right: 0; top: 50px; width: 256px; z-index: 31; margin: 0; min-height: 0; padding: 4px 8px;
+    border-radius: 0; border-width: 0 0 2px 2px; box-shadow: none; }
+  .mascot { font-size: 1.5rem; }
+  .say { font-size: .95rem; }
+  .dock { left: auto; right: 0; top: 0; bottom: 0; width: 256px; justify-content: flex-end; gap: 8px; background: var(--bg);
+    border-top: none; border-left: 2px solid var(--border); padding: 8px 10px max(10px, env(safe-area-inset-bottom)); }
+  .choices { flex-direction: column; align-items: stretch; }
+  .btn.big { font-size: 1.05rem; padding: 8px 14px; min-height: 46px; }
+  .lesson-card { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; align-items: start; padding: 10px 12px; }
+  .lesson-head { grid-column: 1 / -1; }
+  .lesson-rule { grid-column: 1; font-size: 1rem; margin: 6px 0; }
+  .lesson-example { grid-column: 2; grid-row: 2 / span 2; }
+  .lesson-actions { grid-column: 1; margin-top: 6px; justify-content: flex-start; }
+}

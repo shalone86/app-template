@@ -74,6 +74,7 @@ Other hosts: `public/` alone works on any static host (GitHub Pages, Netlify, a 
 - **Never reload the page mid-game** for an update, and not on the first visit.
 - **iOS needs PNG icons;** SVG alone gives a blank home-screen icon.
 - **Pinch-zoom hides fixed bars;** keep answer controls in `.dock`.
+- **Test on a sideways phone (780×360).** Only 360 px tall: base.css moves the top buttons, bubble and `.dock` into a right-hand column there, so the game gets the full height. Don't let "wide screen" sizes kick in on short screens (use `min-height` in those media queries).
 - **Safari is picky with tiny MP3 clips;** the Worker sends WAV.
 
 ## License
