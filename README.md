@@ -26,6 +26,7 @@ No build step: plain ES modules in `public/`.
    - `public/index.html` → `<title>`, description, `apple-mobile-web-app-title`, the brand text
    - `public/manifest.webmanifest` → `name`, `short_name`, `description`
    - `public/js/app.js` → `S.init("myapp:v1")`. **Every app needs its own key**, or apps on the same domain could share saved progress.
+   - `public/sw.js` → `const APP = "myapp"`. Apps share one site on the hub (angelio.org/<app>/), so each app's caches need their own prefix.
 3. Draw the icon in `public/icon.svg` (rounded) and `public/icon-maskable.svg` (full square, art in the middle 80%), then run `node scripts/make-icons.cjs`.
 4. Replace the demo in `public/js/app.js` and `public/css/app.css` with the app. Put pure logic (levels, question generators) in its own module and test it in `test/`.
 5. When you add files, list them in `ASSETS` in `public/sw.js`, and bump `VERSION` whenever you deploy changes.
