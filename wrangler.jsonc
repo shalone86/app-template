@@ -12,7 +12,7 @@
   "observability": { "enabled": true },
   // When the app lives on the hub (angelio.org/<path>/) and still has an old domain, set both and the
   // old address will redirect there, carrying saved progress (worker/moved.js):
-  // "vars": { "HOME_URL": "https://angelio.org/my-app/", "STORE_KEY": "myapp:v1" },
+  // "vars": { "HOME_URL": "https://example.org/my-app/", "STORE_KEY": "myapp:v1" },
   "workers_dev": true
   // Custom domain: add a comma after "workers_dev": true and uncomment:
   // "routes": [{ "pattern": "my-app.example.com", "custom_domain": true }]

@@ -23,7 +23,7 @@ import { movedResponse } from "./moved.js";
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    // Old address (e.g. …shalonely.com): carry progress over to the new one.
+    // Old address: carry saved progress over to the new one (worker/moved.js).
     const moved = movedResponse(url, env);
     if (moved) return moved;
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);

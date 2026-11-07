@@ -1,4 +1,4 @@
-// When an app moves to a new address (e.g. regroup.shalonely.com → angelio.org/regroup/), its old
+// When an app moves to a new address (e.g. games.example.com → example.org/games/), its old
 // address shows a tiny page that carries the child's saved progress (this browser's localStorage)
 // to the new address and opens it. The app's index.html picks it up from "#migrate=…".
 //

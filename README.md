@@ -1,52 +1,81 @@
 # Learning app template
 
-The starting point for our kids' learning apps (Regroup!, Snap & Split, …). Everything Regroup taught us is already here, so a new app starts with the boring parts done:
+A starter for **kids' learning web apps**: the pieces every app needs when the player is 4 to 9 years old and may not read yet. It's what the [Angelio](https://angelio.org) games (Regroup!, Snap & Split, Doubles, Grammar!) are built on, and you're welcome to build your own.
 
-- **Read-aloud voice:** the Cloudflare voice (Workers AI, Deepgram Aura-2) when it's available, otherwise the device's own voice. If the Cloudflare voice fails (for example, the free daily allowance is used up), the device voice takes over for 10 minutes.
-- **Sound effects** for every kind of press: number notes, select, delete, check, tap, lift, land, slide, snap, crack, take-away, right, oops, win, fanfare (`kit/sound.js`).
-- **Motion helpers** for moving things between places: ghosts, FLIP moves, arcs, pop, shake, vanish, confetti (`kit/fx.js`).
-- **"How it works" cards** before a level: a rule, an animated example, read aloud, with Listen / Skip / Start (`kit/lesson.js`).
-- **Varied prompts** so kids don't hear the same line every time: `leadIn()`, `praise()`, `tryAgain()` and `vary(key, [...])` (`kit/vary.js`).
-- **The answer bar stays visible when kids pinch-zoom** (`kit/dock.js`).
-- **Progress, stars and stickers** saved in the browser only (`kit/store.js`, `kit/ui.js`).
-- **Hash router** whose views can return a cleanup function (`kit/router.js`).
-- **Grown-ups page** with voice, sounds and passcode settings (`kit/ui.js → viewGrownups`).
-- **Shared look:** big tap targets, dark mode, and the colors `--blue --green --red --purple --yellow` (`css/base.css`).
-- **Installable and offline:** service worker, manifest, and PNG icons for iOS and Android.
-- **Cloudflare Worker** serving the app plus `/api/health` and `/api/tts`, with a passcode option. The voice is all Cloudflare Workers AI: Aura-2 for single words and numbers, MeloTTS (about 100× cheaper) for sentences of three or more words.
+- **Plain web:** HTML, CSS and ES modules in `public/`. No build step, no framework. Open it with any static server.
+- **Works without a server:** the app runs fully in the browser and offline. A small optional Cloudflare Worker adds a nicer read-aloud voice.
+- **Kid-tested defaults:** everything said aloud, big tap targets, gentle mistakes, stars and stickers, no accounts.
 
-No build step: plain ES modules in `public/`.
-
-## Start a new app
-
-1. On GitHub, open this repo and press **Use this template → Create a new repository** (for example `snap-split`).
-2. Rename it (search for `my-app`, `My App`, `myapp:v1`):
-   - `wrangler.jsonc` → `"name"` (the Worker name) and, if wanted, the custom domain line
-   - `package.json` → `"name"`
-   - `public/index.html` → `<title>`, description, `apple-mobile-web-app-title`, the brand text
-   - `public/manifest.webmanifest` → `name`, `short_name`, `description`
-   - `public/js/app.js` → `S.init("myapp:v1")`. **Every app needs its own key**, or apps on the same domain could share saved progress.
-   - `public/sw.js` → `const APP = "myapp"`. Apps share one site on the hub (angelio.org/<app>/), so each app's caches need their own prefix.
-3. Draw the icon in `public/icon.svg` (rounded) and `public/icon-maskable.svg` (full square, art in the middle 80%), then run `node scripts/make-icons.cjs`.
-4. Replace the demo in `public/js/app.js` and `public/css/app.css` with the app. Put pure logic (levels, question generators) in its own module and test it in `test/`.
-5. When you add files, list them in `ASSETS` in `public/sw.js`, and bump `VERSION` whenever you deploy changes.
-
-## Run, test, deploy
+## Quick start
 
 ```bash
+# 1. Get a copy: "Use this template" on GitHub, or:
+npx degit shalone86/app-template fraction-pizza && cd fraction-pizza
+
+# 2. Name it (Worker name, title, saved-progress key, cache name)
 npm install
-npm test                       # node:test, no dependencies
-python3 -m http.server -d public 8787    # or: npx wrangler dev
-npx wrangler deploy            # → https://<name>.<you>.workers.dev
+npm run new -- fraction-pizza "Fraction Pizza"
+
+# 3. Run it
+python3 -m http.server -d public 8787        # then open http://localhost:8787
+# or, with the voice API: npm run dev
+
+# 4. Test and deploy
+npm test
+npx wrangler deploy                          # → https://fraction-pizza.<you>.workers.dev
 ```
 
-The voice API is open unless you set a passcode: `npx wrangler secret put APP_PASSCODE` (then enter it on the grown-ups page). On Cloudflare's free plan the voice costs nothing and falls back to the device voice after the daily allowance; on the paid plan, words cost $0.03 per 1,000 characters and sentences a tiny fraction of that.
+Then draw your icon in `public/icon.svg` (rounded square) and `public/icon-maskable.svg` (full square, art in the middle 80%), and run `npm run icons` (needs Playwright's Chromium once: `npx -y playwright@1 install chromium`).
 
-## Lessons learned (please keep)
+Replace the demo in `public/js/app.js` (a small "count the dots" level that shows every piece working) with your app.
 
-- **iOS needs PNG icons.** SVG alone shows a blank icon on the home screen.
-- **Views may be async;** the router only keeps real cleanup functions (an async view once froze Regroup's navigation).
-- **Little fingers miss small targets.** Make the whole area a tap target (e.g. "tap anywhere in the lane takes one away") and make things bigger while they're being tapped.
-- **Pinch-zoom hides fixed bars;** `keepDockVisible()` handles the bottom bar. Put the controls kids need in `.dock`.
-- **Everything is said aloud,** and nothing should require reading for the youngest kids.
-- **Wrong answers are gentle:** a hint first, then show the answer after a second try. Stars, not scores.
+## What's in the kit (`public/js/kit/`)
+
+| Module | What it gives you |
+|---|---|
+| `store.js` | Settings and progress in `localStorage`. `init(key)`, `settings()`, `setSetting()`, `progress(id)`, `finishLevel(id, stars, sticker)` |
+| `router.js` | Hash router: `createRouter([[/^play\/(\w+)$/, viewPlay], …])`. A view may return a cleanup function |
+| `tts.js` | `speak(text)`: the Worker's voice when it's there, otherwise the device's voice, with fallbacks that never block the game |
+| `sound.js` | `sfx.tap()`, `sfx.key(n)` (a note per digit), `sfx.snap()`, `sfx.crack()`, `sfx.right()`, `sfx.oops()`, `sfx.fanfare()` and more, made with Web Audio (no files) |
+| `fx.js` | Motion: `capture()` + `flip()` to animate things to new places, `move()` along arcs, `pop()`, `shake()`, `vanish()`, `flyHtml()`, `confetti()` |
+| `lesson.js` | `await showLesson(container, { title, rule, exampleHtml, voice })`: a "How it works" card with an animated example, read aloud, and Listen / Skip / Start |
+| `vary.js` | Variety so kids don't hear the same line: `leadIn()` ("How about this one?"), `praise()`, `tryAgain()`, `vary(key, [...])` |
+| `ui.js` | Speech bubble `say()`, `nextButton()`, `starsFor(mistakes)`, `showFinish()` with stickers, `stickerBook()`, the grown-ups page, click sounds |
+| `dock.js` | `keepDockVisible()`: the bottom answer bar stays on screen when a child pinch-zooms |
+| `speech.js` | `spoken(text)`: turns "3 + 2 = ?" into "3 plus 2 equals what?" for the voice |
+
+`css/base.css` has the shared look (light and dark mode, chunky buttons, the bubble, the dock, the lesson card) and five colors: `--blue --green --red --purple --yellow`, each with `-soft` and `-ink`. Your styles go in `css/app.css`.
+
+## The Worker (optional)
+
+`worker/index.js` serves `public/` and two endpoints:
+
+- `GET /api/health` → `{ tts: true, … }` when a voice is available
+- `GET /api/tts?text=…&voice=helena` → a WAV clip from Cloudflare Workers AI (Deepgram Aura-2), cached at the edge so each sentence is made once
+
+Without the Worker (or when it fails, or the daily free allowance is used up) the app uses the device's voice, so it never breaks. Costs: on Cloudflare's free plan there's a daily free allowance; beyond that Aura-2 is $0.03 per 1,000 characters. Set `npx wrangler secret put APP_PASSCODE` to keep strangers off your quota (players enter it on the grown-ups page).
+
+Other hosts: `public/` alone works on any static host (GitHub Pages, Netlify, a USB stick); you just get the device voice.
+
+## Checklist for a new app
+
+- **Unique names:** `npm run new` sets them. If several apps share one website (like angelio.org/regroup/ and /snap/), each needs its own saved-progress key (`S.init("…:v1")`) and cache name (`APP` in `sw.js`).
+- **Offline:** list new files in `ASSETS` in `public/sw.js`, and bump `VERSION` when you deploy.
+- **Pure logic in its own module** (levels, question generators) with tests in `test/`. Generate many questions in a test and check that every answer is among its choices; it catches more bugs than you'd think.
+- **Moving to a new address later:** set `HOME_URL` and `STORE_KEY` in `wrangler.jsonc` vars, and the old address sends players to the new one with their saved progress (`worker/moved.js`).
+
+## Lessons learned (please keep these)
+
+- **Say everything aloud.** The youngest players can't read the instructions.
+- **Make whole areas tappable.** Little fingers miss small targets ("tap anywhere in the lane takes one away"), and make things bigger while they're being tapped.
+- **One tap beats "select, then place".** Tapping a word should put it in the next empty slot.
+- **Mistakes are gentle:** a hint first; after a second try, show the answer and move on. Stars, not scores.
+- **Vary the voice lines** (`vary.js`). Hearing the exact same sentence 20 times gets old fast.
+- **Never reload the page mid-game** for an update, and not on the first visit.
+- **iOS needs PNG icons;** SVG alone gives a blank home-screen icon.
+- **Pinch-zoom hides fixed bars;** keep answer controls in `.dock`.
+- **Safari is picky with tiny MP3 clips;** the Worker sends WAV.
+
+## License
+
+MIT, see [LICENSE](LICENSE). Build anything you like with it, including paid apps. The name "Angelio" and its logo are not part of the license.
