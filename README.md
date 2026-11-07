@@ -5,6 +5,8 @@ The starting point for our kids' learning apps (Regroup!, Snap & Split, …). Ev
 - **Read-aloud voice:** the Cloudflare voice (Workers AI, Deepgram Aura-2) when it's available, otherwise the device's own voice. If the Cloudflare voice fails (for example, the free daily allowance is used up), the device voice takes over for 10 minutes.
 - **Sound effects** for every kind of press: number notes, select, delete, check, tap, lift, land, slide, snap, crack, take-away, right, oops, win, fanfare (`kit/sound.js`).
 - **Motion helpers** for moving things between places: ghosts, FLIP moves, arcs, pop, shake, vanish, confetti (`kit/fx.js`).
+- **"How it works" cards** before a level: a rule, an animated example, read aloud, with Listen / Skip / Start (`kit/lesson.js`).
+- **Varied prompts** so kids don't hear the same line every time: `leadIn()`, `praise()`, `tryAgain()` and `vary(key, [...])` (`kit/vary.js`).
 - **The answer bar stays visible when kids pinch-zoom** (`kit/dock.js`).
 - **Progress, stars and stickers** saved in the browser only (`kit/store.js`, `kit/ui.js`).
 - **Hash router** whose views can return a cleanup function (`kit/router.js`).

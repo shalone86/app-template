@@ -9,7 +9,7 @@ const ASSETS = [
   "./", "index.html", "manifest.webmanifest", "icon.svg", "icons/icon-192.png", "icons/apple-touch-icon.png",
   "css/base.css", "css/app.css", "js/app.js",
   "js/kit/api.js", "js/kit/dock.js", "js/kit/fx.js", "js/kit/router.js", "js/kit/sound.js", "js/kit/speech.js",
-  "js/kit/store.js", "js/kit/tts.js", "js/kit/ui.js",
+  "js/kit/store.js", "js/kit/tts.js", "js/kit/ui.js", "js/kit/lesson.js", "js/kit/vary.js",
 ];
 
 self.addEventListener("install", (e) => {

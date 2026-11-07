@@ -10,6 +10,8 @@ import { stop } from "./kit/tts.js";
 import { sfx } from "./kit/sound.js";
 import * as FX from "./kit/fx.js";
 import { keepDockVisible } from "./kit/dock.js";
+import { showLesson } from "./kit/lesson.js";
+import { leadIn, praise, tryAgain } from "./kit/vary.js";
 import { esc, pick, starsHtml, starsFor, nextButton, say, showFinish, stickerBook, viewGrownups, installClickSounds, wireVoiceToggle } from "./kit/ui.js";
 
 const app = document.getElementById("app");
@@ -62,11 +64,19 @@ function viewPlay(id) {
   let alive = true, mistakes = 0;
 
   (async () => {
+    // "How it works" card before the first question (Listen / Skip / Start).
+    await showLesson(stage, {
+      emoji: level.emoji, title: "Counting dots",
+      rule: "Touch each dot as you count. The <b>last number</b> you say is how many!",
+      exampleHtml: `<div class="demo-dots"><i></i><i></i><i></i></div><p class="center"><span class="lesson-focus">1, 2, 3 → <b>3 dots</b></span></p>`,
+      voice: "Touch each dot as you count. One, two, three. The last number you say is how many. Three dots!",
+    });
     for (let k = 0; k < QUESTIONS && alive; k++) {
       app.querySelectorAll("[data-dot]").forEach((d) => d.classList.toggle("now", +d.dataset.dot === k));
       const n = 1 + Math.floor(Math.random() * level.max);
       stage.innerHTML = `<div class="demo-dots">${"<i></i>".repeat(n)}</div>`;
-      say(bubble, "How many dots?");
+      // Vary the prompt so it isn't the same line every time.
+      say(bubble, k === 0 ? "How many dots?" : `${leadIn()} How many dots?`);
       const opts = [...new Set([n, Math.max(1, n - 1), Math.min(level.max, n + 1), 1 + Math.floor(Math.random() * level.max)])].slice(0, 3).sort(() => Math.random() - 0.5);
       if (!opts.includes(n)) opts[0] = n;
       dock.innerHTML = `<div class="choices">${opts.map((v) => `<button class="choice-card" data-v="${v}">${v}</button>`).join("")}</div>`;
@@ -74,11 +84,11 @@ function viewPlay(id) {
         dock.querySelectorAll("[data-v]").forEach((b) => b.onclick = () => {
           sfx.select();
           if (+b.dataset.v === n) { b.classList.add("right"); sfx.right(); FX.confetti(15); resolve(); }
-          else { mistakes++; b.classList.add("wrong"); b.disabled = true; FX.shake(b); sfx.oops(); say(bubble, "Count again, one at a time!"); }
+          else { mistakes++; b.classList.add("wrong"); b.disabled = true; FX.shake(b); sfx.oops(); say(bubble, `${tryAgain()} Count one at a time.`); }
         });
       });
       if (!alive) return;
-      say(bubble, `${pick(["Yes!", "Great!", "You got it!"])} ${n}!`);
+      say(bubble, `${praise()} ${n}!`);
       app.querySelector(`[data-dot="${k}"]`)?.classList.add("done");
       S.solvedOne();
       await nextButton(dock, k < QUESTIONS - 1 ? "Next ▶" : "Finish 🏁");
