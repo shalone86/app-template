@@ -55,6 +55,8 @@ Replace the demo in `public/js/app.js` (a small "count the dots" level that show
 
 Without the Worker (or when it fails, or the daily free allowance is used up) the app uses the device's voice, so it never breaks. Costs: on Cloudflare's free plan there's a daily free allowance; beyond that Aura-2 is $0.03 per 1,000 characters. Set `npx wrangler secret put APP_PASSCODE` to keep strangers off your quota (players enter it on the grown-ups page).
 
+**Optional safety caps and family codes** (`worker/codes.js`): bind a KV namespace as `CODES` and the voice gets a daily cap on new clips (`TTS_DAILY_CAP`, default 3000). If your app checks speech, `checkSpeech(request, env)` adds a few free tries a day and family codes with a monthly limit (turn on with var `REQUIRE_CODE = "true"`).
+
 Other hosts: `public/` alone works on any static host (GitHub Pages, Netlify, a USB stick); you just get the device voice.
 
 ## Checklist for a new app
