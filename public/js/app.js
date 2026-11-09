@@ -3,6 +3,7 @@
 // the dock, motion, stars and stickers, and the grown-ups page. Replace it with your app.
 
 import * as S from "./kit/store.js";
+import { jingleOnce } from "./kit/jingle.js";
 S.init("myapp:v1", {}); // ← change the key for every app (and add app-specific settings here)
 
 import { createRouter } from "./kit/router.js";
@@ -12,7 +13,7 @@ import * as FX from "./kit/fx.js";
 import { keepDockVisible } from "./kit/dock.js";
 import { showLesson } from "./kit/lesson.js";
 import { leadIn, praise, tryAgain } from "./kit/vary.js";
-import { esc, pick, starsHtml, starsFor, nextButton, say, showFinish, stickerBook, viewGrownups, installClickSounds, wireVoiceToggle } from "./kit/ui.js";
+import { esc, pick, starsHtml, starsFor, nextButton, say, markDot, showFinish, stickerBook, viewGrownups, installClickSounds, wireVoiceToggle } from "./kit/ui.js";
 
 const app = document.getElementById("app");
 
@@ -73,6 +74,7 @@ function viewPlay(id) {
     });
     for (let k = 0; k < QUESTIONS && alive; k++) {
       app.querySelectorAll("[data-dot]").forEach((d) => d.classList.toggle("now", +d.dataset.dot === k));
+      const before = mistakes;
       const n = 1 + Math.floor(Math.random() * level.max);
       stage.innerHTML = `<div class="demo-dots">${"<i></i>".repeat(n)}</div>`;
       // Vary the prompt so it isn't the same line every time.
@@ -89,7 +91,7 @@ function viewPlay(id) {
       });
       if (!alive) return;
       say(bubble, `${praise()} ${n}!`);
-      app.querySelector(`[data-dot="${k}"]`)?.classList.add("done");
+      markDot(app, k, mistakes > before); // yellow if it took a mistake
       S.solvedOne();
       await nextButton(dock, k < QUESTIONS - 1 ? "Next ▶" : "Finish 🏁");
     }
@@ -105,6 +107,7 @@ function viewPlay(id) {
 }
 
 installClickSounds();
+jingleOnce("demo", () => S.settings().sounds); // the app's little logo sound, on the first tap
 route();
 keepDockVisible();
 if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});

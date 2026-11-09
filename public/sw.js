@@ -1,7 +1,7 @@
 // Offline support: network first for the app (updates show right away), cache first for fonts
 // and voice clips. Bump VERSION when you change files, and list new files in ASSETS.
 
-const VERSION = "v5";
+const VERSION = "v6";
 // Cache names start with the app id: several apps can share one site (angelio.org/regroup/, /snap/…),
 // and each must only clean up its own caches.
 const APP = "myapp";
@@ -12,7 +12,7 @@ const ASSETS = [
   "./", "index.html", "manifest.webmanifest", "icon.svg", "icons/icon-192.png", "icons/apple-touch-icon.png",
   "css/base.css", "css/app.css", "js/app.js",
   "js/kit/api.js", "js/kit/dock.js", "js/kit/fx.js", "js/kit/router.js", "js/kit/sound.js", "js/kit/speech.js",
-  "js/kit/store.js", "js/kit/tts.js", "js/kit/ui.js", "js/kit/lesson.js", "js/kit/vary.js",
+  "js/kit/store.js", "js/kit/tts.js", "js/kit/ui.js", "js/kit/lesson.js", "js/kit/vary.js", "js/kit/stickers.js", "js/kit/jingle.js",
 ];
 
 self.addEventListener("install", (e) => {

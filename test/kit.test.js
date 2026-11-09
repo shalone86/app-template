@@ -9,3 +9,19 @@ test("spoken text reads math and drops emoji and html", () => {
 });
 
 // Add your app's own tests (pure logic: levels, question generators…) in test/app.test.js.
+
+test("one sticker per level: mini with mistakes, grows giant after a perfect replay", async () => {
+  const mem = {};
+  globalThis.localStorage = { getItem: (k) => mem[k] ?? null, setItem: (k, v) => { mem[k] = String(v); } };
+  const S = await import("../public/js/kit/store.js?stickers");
+  S.init("demo:v1");
+  let r = S.finishLevel("a", 2, "🦄", false);
+  assert.deepEqual([r.e, r.big, r.isNew, r.grew], ["🦄", false, true, false]);
+  r = S.finishLevel("a", 2, "🚀", false);
+  assert.deepEqual([r.e, r.big, r.isNew, r.grew], ["🦄", false, false, false]);
+  r = S.finishLevel("a", 3, "🚀", true);
+  assert.deepEqual([r.e, r.big, r.isNew, r.grew], ["🦄", true, false, true]);
+  assert.equal(S.stickers().length, 1);
+  assert.deepEqual(JSON.parse(mem["angelio:stickers"])["demo/a"].big, true);
+  delete globalThis.localStorage;
+});
