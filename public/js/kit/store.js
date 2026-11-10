@@ -7,7 +7,7 @@ const BASE_SETTINGS = {
   readAloud: true, // say every step out loud (for kids still learning to read)
   sounds: true, // sound effects
   ttsSource: "auto", // auto | server | browser
-  voice: "thalia", // Workers AI (Deepgram Aura-2) English voice
+  voice: "helena", // Workers AI (Deepgram Aura-2) English voice
   browserVoice: "",
   slow: false,
   passcode: "", // only if APP_PASSCODE is set on the Worker
