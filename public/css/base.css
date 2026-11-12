@@ -230,3 +230,11 @@ body.in-game .topbar { display: none; }
   .lesson-example { grid-column: 2; grid-row: 2 / span 2; }
   .lesson-actions { grid-column: 1; margin-top: 6px; justify-content: flex-start; }
 }
+
+/* Sideways phones: room for every top-bar button (✕, dots, 💬, 💡, 🔊) in the 256px column. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .play-top { gap: 4px; }
+  .play-top .icon-btn { width: 34px; height: 34px; flex: none; font-size: .95rem; }
+  .play-top .dots { gap: 4px; min-width: 0; }
+  .play-top .dots i { width: 9px; height: 9px; }
+}
