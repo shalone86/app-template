@@ -57,6 +57,8 @@ export const JINGLES = {
   fractions() { noise(0, { dur: 0.12, freq: 6000, q: 0.7, vol: 0.08 }); [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone(0.12 + i * 0.075, f, { dur: 0.2, type: "triangle", vol: 0.09 })); },
   // Articulate: two sung "la-la" notes with a little vibrato.
   articulate() { tone(0, 783.99, { dur: 0.22, vol: 0.1, vib: 6, attack: 0.03 }); tone(0.2, 1046.5, { dur: 0.45, vol: 0.1, vib: 8, attack: 0.03 }); },
+  // Letter Lane: the first notes of the alphabet song (a traditional tune), quick and bright.
+  letters() { [523.25, 523.25, 783.99, 783.99, 880, 880, 783.99].forEach((f, i) => tone(i * 0.11, f, { dur: i === 6 ? 0.35 : 0.12, type: "triangle", vol: 0.08 })); },
   // Sticker World: a playset lid opening, with sparkles.
   stickers() { tone(0, 220, { to: 440, dur: 0.25, type: "triangle", vol: 0.08 }); [1318.5, 1567.98, 2093].forEach((f, i) => tone(0.2 + i * 0.06, f, { dur: 0.4, vol: 0.05 })); },
 };
